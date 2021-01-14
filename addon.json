@@ -1,0 +1,11 @@
+{
+	"title"		:	"Oxygen and Stamina System",
+	"type"		:	"tool",
+	"tags"		:	[ "realism" ],
+	"ignore"	:
+	[
+		"*.psd",
+		"*.vcproj",
+		"*.svn*"
+	]
+}
