@@ -1,3 +1,5 @@
+#Everything in this README file refers to features which have not yet been implemented
+
 # Oxygen and Stamina System
 A Gmod addon that attempts to provide a replacement for the Suit Power system
 
