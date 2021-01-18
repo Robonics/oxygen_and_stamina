@@ -23,12 +23,6 @@ util.AddNetworkString("ox_update")
 util.AddNetworkString("st_update")
 util.AddNetworkString("fl_update")
 
-local PlyD = FindMetaTable("Player")
-PlyD.GetStamina = function() return self.stamina end
-PlyD.GetOxygen = function() return self.oxygen end
-PlyD.GetFlashlightBattery = function() return self.flashlight end
-
-
 hook.Add("Think", "ox_think", function()
     if(GetConVar("sv_oxygen_enable"):GetBool() == false) then return end
     for k, ply in ipairs(player.GetAll()) do
@@ -36,6 +30,7 @@ hook.Add("Think", "ox_think", function()
         ply.oxygen = ply.oxygen or 200
         ply.last_oxygen = ply.last_oxygen or 200
         ply.last_dmg = ply.last_dmg or CurTime()
+        ply.stamina = ply.stamina or 10
         max_oxygen = GetConVar("sv_oxygen_maxoxygen"):GetInt()
 
         if(ply:Alive() and IsValid(ply)) then
@@ -72,6 +67,9 @@ hook.Add("Think", "ox_think", function()
             end
             ply.last_oxygen = ply.oxygen
         end
+
+        ply.oxygen = hook.Run("OxygenThink", ply, ply.oxygen, ply.last_oxygen) or ply.oxygen
+
     end
 end)
 
@@ -128,6 +126,9 @@ hook.Add("SetupMove", "st_move_limit", function(ply, mvd, cmd)
         net.WriteInt(ply.stamina, 16)
         net.Send(ply)
     end
+
+    ply.stamina = hook.Run("StaminaThink", ply, ply.stamina, ply.last_stamina, mvd, cmd) or ply.stamina
+
     ply.last_stamina = ply.stamina
 end)
 
@@ -154,6 +155,9 @@ hook.Add("Think", "fl_think", function()
             net.WriteInt(ply.flashlight, 16)
             net.Send(ply)
         end
+
+        ply.flashlight = hook.Run("FlashlightThink", ply, ply.flashlight, ply.last_flashlight) or ply.flashlight
+
         ply.last_flashlight = ply.flashlight
     end
 end)

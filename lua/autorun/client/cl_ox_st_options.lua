@@ -1,3 +1,9 @@
+OXST = {
+	animatedFade = function( timesince, fadetime, max )
+		return max + ((math.Clamp((timesince - CurTime()), (fadetime * -1), 0) / fadetime) * max)
+	end
+}
+
 hook.Add( "AddToolMenuTabs", "ox_st_tab", function()
 	spawnmenu.AddToolTab("ox_st_tab", "Oxygen & Stamina", "icon16/plugin.png") -- Add a new tab
 
