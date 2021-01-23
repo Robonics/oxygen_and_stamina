@@ -5,6 +5,8 @@ CreateClientConVar("cl_oxygen_hudpos_y", "30", true, false, "The Y Position of t
 CreateClientConVar("cl_oxygen_hudpos_w", "200", true, false, "The Width of the Oxygen Indicator")
 CreateClientConVar("cl_oxygen_hudpos_h", "20", true, false, "The Height of the Oxygen Indicator")
 CreateClientConVar("cl_oxygen_hudhide", "0", true, false, "Hide the Oxygen Indicator when Oxygen is full")
+CreateClientConVar("cl_oxygen_motionblur", "1", true, false, "Show a motion blur effect when low on oxygen")
+
 
 local oxygen = GetConVar("sv_oxygen_maxoxygen"):GetInt()
 
@@ -63,4 +65,15 @@ hook.Add("HUDPaint", "ox_hud", function()
 	
 	hook.Run("OxygenHUDPostPaint", x, y, w, h, timesincenotfull)
 
+end)
+
+local function simpleLerp( a, b, t)
+    return a + (b - a) * t
+end
+
+hook.Add("RenderScreenspaceEffects", "ox_render_lowoxygen", function( origin, angles, fov )
+	oxygen = oxygen or 200
+    if(oxygen <=  ( GetConVar("sv_oxygen_maxoxygen"):GetInt() / 4) and GetConVar("cl_oxygen_motionblur"):GetBool()) then
+        DrawMotionBlur( simpleLerp(0.3, 1, (oxygen / ( GetConVar("sv_oxygen_maxoxygen"):GetInt() / 4) ) ), 0.8, 0.01 )
+    end
 end)

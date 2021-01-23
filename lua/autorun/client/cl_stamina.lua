@@ -5,7 +5,7 @@ CreateClientConVar("cl_stamina_hudpos_y", "60", true, false, "The Y Position of 
 CreateClientConVar("cl_stamina_hudpos_w", "200", true, false, "The Width of the Stamina Indicator")
 CreateClientConVar("cl_stamina_hudpos_h", "20", true, false, "The Height of the Stamina Indicator")
 CreateClientConVar("cl_stamina_hudhide", "0", true, false, "Hide the Stamina Indicator when Oxygen is full")
-
+CreateClientConVar("cl_stamina_motionblur", "1", true, false, "Show a motion blur effect when low on stamina")
 
 local stamina = GetConVar("sv_stamina_maxstamina"):GetInt()
 
@@ -35,6 +35,7 @@ hook.Add("CreateMove", "st_cl_move", function(move)
     if(stamina <= 0 and GetConVar("sv_stamina_jumplimited"):GetBool()) then
         move:RemoveKey(IN_JUMP)
     end
+
 end)
 
 local timesincenotfull = CurTime()
@@ -66,4 +67,15 @@ hook.Add("HUDPaint", "st_hud", function()
 
     hook.Run("StaminaHUDPostPaint", x, y, w, h, timesincenotfull)
 
+end)
+
+local function simpleLerp( a, b, t)
+    return a + (b - a) * t
+end
+
+hook.Add("RenderScreenspaceEffects", "st_render_lowstamina", function( origin, angles, fov )
+    stamina = stamina or 1
+    if(stamina <= GetConVar("sv_stamina_sprint_at"):GetInt() and GetConVar("cl_stamina_motionblur"):GetBool()) then
+        DrawMotionBlur( simpleLerp(0.3, 1, (stamina / GetConVar("sv_stamina_sprint_at"):GetInt()) ), 0.8, 0.01 )
+    end
 end)
