@@ -8,7 +8,7 @@ I'm not going to repeat everything that was on the workshop page you likely used
 `GetLocalStamina()` / `GetLocalOxygen()` / `GetLocalFlashlightBattery()`
 These are client functions that will return the value of their respective value
 
-`OXST.timeFade(timeSince, fadeTime, max)`
+`_G.OXST.timeFade(timeSince, fadeTime, max)`
 This function is used to lerp the alpha of HUD elements if they are full and `sv_module_hudhide` is `1`. You should add this as the alpha perameter for all color values in your HUD, where timeSince is the time the hud was last not full (Passed as `timeFull` in the Override hooks, you can also add to the value to delay the fade), fadeTime is how long you want the fade transition to take, and max is the normal unfaded alpha value you want
 
 Client Hook `StaminaHUDPaint(x, y, w, h, timeFull)` / `OxygenHUDPaint(x, y, w, h, timeFull)` / `FlashlightHUDPaint(x, y, w, h, timeFull)`
